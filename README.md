@@ -2,7 +2,7 @@
 
 ## Tugas 7
 
-### 📚 Pengertian Widget Tree dan Hubungan Parent-Child Antar Widget
+###  Pengertian Widget Tree dan Hubungan Parent-Child Antar Widget
 
 **Widget tree** adalah struktur hierarki yang menggambarkan bagaimana widget saling tersusun dalam aplikasi Flutter. Dalam hal ini, widget tree disusun secara bertingkat seperti pohon.
 
@@ -13,7 +13,7 @@
 
 ---
 
-### 🧩 Widget yang Digunakan dalam Proyek dan Fungsinya
+###  Widget yang Digunakan dalam Proyek dan Fungsinya
 
 | Widget | Fungsi |
 |--------|--------|
@@ -35,7 +35,7 @@
 
 ---
 
-### 🎨 Fungsi MaterialApp, Mengapa Sering Digunakan untuk Widget Root?
+###  Fungsi MaterialApp, Mengapa Sering Digunakan untuk Widget Root?
 
 `MaterialApp` adalah widget utama untuk aplikasi Flutter berbasis Material Design. Fungsinya antara lain:
 
@@ -48,7 +48,7 @@ Widget ini sering dipakai sebagai root karena memberikan struktur dasar dan fitu
 
 ---
 
-### 🔄 StatelessWidget vs StatefulWidget: Kapan Menggunakannya?
+###  StatelessWidget vs StatefulWidget: Kapan Menggunakannya?
 
 | StatelessWidget | StatefulWidget |
 |-----------------|----------------|
@@ -62,7 +62,7 @@ Widget ini sering dipakai sebagai root karena memberikan struktur dasar dan fitu
 
 ---
 
-### 🌳 Pentingnya BuildContext dan Penggunaannya dalam Metode Build
+###  Pentingnya BuildContext dan Penggunaannya dalam Metode Build
 
 `BuildContext` adalah objek yang menyimpan informasi posisi widget dalam widget tree dan memberikan akses ke parent widget serta resource aplikasi (theme, navigator, scaffold, dll).
 
@@ -72,10 +72,10 @@ Widget ini sering dipakai sebagai root karena memberikan struktur dasar dan fitu
 
 ---
 
-### ⚡ Konsep "Hot Reload" dan Perbedaannya dengan "Hot Restart"
+###  Konsep "Hot Reload" dan Perbedaannya dengan "Hot Restart"
 
 | Hot Reload | Hot Restart |
 |------------|-------------|
-| Menyuntikkan perubahan kode ke app yang sedang berjalan | Restart aplikasi dari awal |
+| Memasukkan perubahan kode ke app yang sedang berjalan | Restart aplikasi dari awal |
 | State aplikasi **tetap tersimpan** | State aplikasi **reset** ke awal |
 | Cepat, cocok saat desain UI | Lebih lambat, digunakan jika perubahan fundamental |
