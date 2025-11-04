@@ -8,10 +8,26 @@ class MyHomePage extends StatelessWidget {
   final String kelas = "C"; // kelas
 
   final List<ItemHomepage> items = [
-    ItemHomepage("All Products", Icons.newspaper),
-    ItemHomepage("My Products", Icons.add),
-    ItemHomepage("Create Product", Icons.logout),
-  ];
+  ItemHomepage(
+    "All Products",
+    Icons.store,
+    color: Colors.blue,
+    snackMessage: "Kamu telah menekan tombol All Products",
+  ),
+  ItemHomepage(
+    "My Products",
+    Icons.inventory_2,
+    color: Colors.green,
+    snackMessage: "Kamu telah menekan tombol My Products",
+  ),
+  ItemHomepage(
+    "Create Product",
+    Icons.add_circle,
+    color: Colors.red,
+    snackMessage: "Kamu telah menekan tombol Create Product",
+  ),
+];
+
 
   @override
     Widget build(BuildContext context) {
@@ -127,11 +143,19 @@ class InfoCard extends StatelessWidget {
 }
 
 class ItemHomepage {
- final String name;
- final IconData icon;
+  final String name;
+  final IconData icon;
+  final Color color;           // warna tombol
+  final String snackMessage;   // pesan snackbar
 
- ItemHomepage(this.name, this.icon);
+  ItemHomepage(
+    this.name,
+    this.icon, {
+    required this.color,
+    required this.snackMessage,
+  });
 }
+
 
 class ItemCard extends StatelessWidget {
   // Menampilkan kartu dengan ikon dan nama.
@@ -144,7 +168,7 @@ class ItemCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Material(
       // Menentukan warna latar belakang dari tema aplikasi.
-      color: Theme.of(context).colorScheme.secondary,
+      color: item.color,
       // Membuat sudut kartu melengkung.
       borderRadius: BorderRadius.circular(12),
 
@@ -155,7 +179,7 @@ class ItemCard extends StatelessWidget {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
             ..showSnackBar(
-              SnackBar(content: Text("Kamu telah menekan tombol ${item.name}!"))
+              SnackBar(content: Text(item.snackMessage))
             );
         },
         // Container untuk menyimpan Icon dan Text
