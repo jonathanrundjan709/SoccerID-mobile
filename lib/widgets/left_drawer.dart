@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:soccerid/screens/menu.dart';
 import 'package:soccerid/screens/newslist_form.dart';
 
 class LeftDrawer extends StatelessWidget {
@@ -6,8 +7,6 @@ class LeftDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final currentRoute = ModalRoute.of(context)?.settings.name;
-
     return Drawer(
       child: ListView(
         children: [
@@ -16,26 +15,25 @@ class LeftDrawer extends StatelessWidget {
               color: Colors.indigo,
             ),
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
                   'Football Shop',
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 28,
+                    fontSize: 30,
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
                 ),
-                SizedBox(height: 12),
+                Padding(padding: EdgeInsets.all(10)),
                 Text(
                   "Seluruh perlengkapan sepak bola favoritmu ada di sini!",
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 15,
                     color: Colors.white,
-                    fontWeight: FontWeight.w400,
+                    fontWeight: FontWeight.normal,
                   ),
                 ),
               ],
@@ -44,26 +42,25 @@ class LeftDrawer extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.home_outlined),
             title: const Text('Halaman Utama'),
-            selected: currentRoute == '/',
             onTap: () {
-              if (currentRoute != '/') {
-                Navigator.pushReplacementNamed(context, '/');
-              } else {
-                Navigator.pop(context);
-              }
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => MyHomePage(),
+                ),
+              );
             },
           ),
           ListTile(
             leading: const Icon(Icons.add_box_outlined),
             title: const Text('Tambah Produk'),
-            selected: currentRoute == NewsFormPage.routeName,
             onTap: () {
-              if (currentRoute != NewsFormPage.routeName) {
-                Navigator.pushReplacementNamed(
-                    context, NewsFormPage.routeName);
-              } else {
-                Navigator.pop(context);
-              }
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const NewsFormPage(),
+                ),
+              );
             },
           ),
         ],

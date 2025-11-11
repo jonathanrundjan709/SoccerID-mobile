@@ -45,7 +45,7 @@ class ItemCard extends StatelessWidget {
           }
         },
         child: Container(
-          padding: const EdgeInsets.all(12),
+          padding: const EdgeInsets.all(8),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -53,9 +53,9 @@ class ItemCard extends StatelessWidget {
                 Icon(
                   item.icon,
                   color: Colors.white,
-                  size: 32,
+                  size: 30,
                 ),
-                const SizedBox(height: 8),
+                const Padding(padding: EdgeInsets.all(3)),
                 Text(
                   item.name,
                   textAlign: TextAlign.center,

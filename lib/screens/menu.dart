@@ -12,22 +12,22 @@ class MyHomePage extends StatelessWidget {
 
   late final List<ItemHomepage> items = [
     const ItemHomepage(
-      "Semua Produk",
+      "All Products",
       Icons.storefront,
       color: Colors.indigo,
-      snackMessage: "Kamu telah menekan tombol Semua Produk!",
+      snackMessage: "Kamu telah menekan tombol All Products!",
     ),
     const ItemHomepage(
-      "Produk Favorit",
+      "My Products",
       Icons.inventory_2,
       color: Colors.teal,
-      snackMessage: "Kamu telah menekan tombol Produk Favorit!",
+      snackMessage: "Kamu telah menekan tombol My Products!",
     ),
     ItemHomepage(
-      "Tambah Produk",
+      "Add Products",
       Icons.add_circle,
       color: Colors.orange,
-      snackMessage: "Kamu telah menekan tombol Tambah Produk!",
+      snackMessage: "Kamu telah menekan tombol Add Products!",
       destinationBuilder: (context) => const NewsFormPage(),
     ),
   ];
@@ -44,63 +44,58 @@ class MyHomePage extends StatelessWidget {
           ),
         ),
         backgroundColor: Theme.of(context).colorScheme.primary,
+        foregroundColor: Colors.white,
       ),
       drawer: const LeftDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: SingleChildScrollView(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Wrap(
-                spacing: 12,
-                runSpacing: 12,
-                alignment: WrapAlignment.center,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Info Cards Row (NPM, Name, Class)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                InfoCard(title: 'NPM', content: npm),
+                InfoCard(title: 'Name', content: nama),
+                InfoCard(title: 'Class', content: kelas),
+              ],
+            ),
+            
+            const SizedBox(height: 16),
+
+            // Welcome Section
+            const Center(
+              child: Column(
                 children: [
-                  InfoCard(title: 'NPM', content: npm),
-                  InfoCard(title: 'Name', content: nama),
-                  InfoCard(title: 'Class', content: kelas),
+                  Text(
+                    'Selamat datang di Football Shop',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(height: 8),
                 ],
               ),
-              const SizedBox(height: 24),
-              const Text(
-                'Selamat datang di Football Shop',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Aplikasi katalog perlengkapan sepak bola favoritmu.',
-                style: TextStyle(
-                  color: Colors.grey.shade700,
-                ),
-              ),
-              const SizedBox(height: 24),
-              LayoutBuilder(
-                builder: (context, constraints) {
-                  final width = constraints.maxWidth;
-                  final crossAxisCount = width > 900
-                      ? 4
-                      : width > 600
-                          ? 3
-                          : 2;
+            ),
 
-                  return GridView.count(
-                    crossAxisCount: crossAxisCount,
-                    crossAxisSpacing: 12,
-                    mainAxisSpacing: 12,
-                    shrinkWrap: true,
-                    physics: const NeverScrollableScrollPhysics(),
-                    children: items
-                        .map((item) => ItemCard(item))
-                        .toList(growable: false),
-                  );
-                },
+            const SizedBox(height: 16),
+
+            // Grid Menu Items
+            Expanded(
+              child: GridView.count(
+                primary: true,
+                padding: const EdgeInsets.all(8),
+                crossAxisSpacing: 10,
+                mainAxisSpacing: 10,
+                crossAxisCount: 3,
+                children: items.map((ItemHomepage item) {
+                  return ItemCard(item);
+                }).toList(),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -108,34 +103,23 @@ class MyHomePage extends StatelessWidget {
 }
 
 class InfoCard extends StatelessWidget {
-  const InfoCard({
-    super.key,
-    required this.title,
-    required this.content,
-  });
-
   final String title;
   final String content;
 
+  const InfoCard({super.key, required this.title, required this.content});
+
   @override
   Widget build(BuildContext context) {
-    return Card(
-      elevation: 2.0,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: SizedBox(
-        width: 180,
-        child: Padding(
+    return Expanded(
+      child: Card(
+        elevation: 2.0,
+        child: Container(
           padding: const EdgeInsets.all(16.0),
           child: Column(
-            mainAxisSize: MainAxisSize.min,
             children: [
               Text(
                 title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.bold,
-                ),
+                style: const TextStyle(fontWeight: FontWeight.bold),
               ),
               const SizedBox(height: 8.0),
               Text(content),
