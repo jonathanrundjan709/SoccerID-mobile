@@ -79,3 +79,23 @@ Widget ini sering dipakai sebagai root karena memberikan struktur dasar dan fitu
 | Memasukkan perubahan kode ke app yang sedang berjalan | Restart aplikasi dari awal |
 | State aplikasi **tetap tersimpan** | State aplikasi **reset** ke awal |
 | Cepat, cocok saat desain UI | Lebih lambat, digunakan jika perubahan fundamental |
+
+## Tugas 8
+
+### Navigator.push() vs Navigator.pushReplacement()
+- `Navigator.push()` menambahkan route baru ke atas stack sehingga pengguna masih bisa kembali dengan tombol Back. Saya memakainya ketika tombol **Tambah Produk** ditekan (via `ItemCard`) agar setelah mengisi formulir pengguna bisa kembali ke beranda dengan gesture Back.
+- `Navigator.pushReplacement()` mengganti route teratas, sehingga halaman sebelumnya tidak bisa kembali otomatis. Pola ini saya gunakan pada `LeftDrawer` ketika berpindah antar menu agar drawer navigation terasa seperti memilih tab (route lama diganti dengan route baru supaya stack tidak menumpuk).
+
+### Memanfaatkan Scaffold, AppBar, dan Drawer
+- `Scaffold` menjadi rangka utama di seluruh halaman (`MyHomePage` dan `NewsFormPage`) sehingga AppBar, body, serta Drawer selalu berada di posisi yang sama.
+- `AppBar` menampilkan identitas “Football Shop” lengkap dengan warna tema yang konsisten, membantu user mengenali konteks halaman apa pun.
+- `Drawer` dipisahkan ke widget `LeftDrawer`, lalu disematkan ke semua `Scaffold` sehingga opsi navigasi (Halaman Utama & Tambah Produk) selalu tersedia tanpa duplikasi kode.
+
+### Manfaat Padding, SingleChildScrollView, dan ListView
+- `Padding` menjaga jarak antar-elemen form supaya tidak terlihat rapat dan memudahkan pengguna menyentuh tiap field (misal pada field nama, harga, dan deskripsi di `NewsFormPage`).
+- `SingleChildScrollView` membungkus seluruh form sehingga konten dapat digulir ketika tinggi layar lebih pendek dari total elemen (tidak ada field yang “hilang” tertutup keyboard).
+- `ListView` (dengan `shrinkWrap`) saya letakkan di dalam `SingleChildScrollView` untuk merangkai input secara vertikal tanpa perlu menghitung tinggi tiap widget; pendekatan ini mempermudah ketika jumlah field bertambah dan tetap responsif.
+
+### Penyesuaian Tema untuk Identitas Brand
+- Di `main.dart` saya mengganti `ThemeData` menjadi `ColorScheme.fromSeed(seedColor: Colors.indigo)` dan aksen oranye, lalu memakai warna tersebut pada AppBar, tombol `Save`, hingga header drawer.
+- Pendekatan ini memastikan seluruh halaman memakai palet yang sama (ungu tua untuk elemen utama, oranye sebagai aksen), sehingga aplikasi Football Shop punya identitas visual konsisten.

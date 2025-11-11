@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:soccerid/menu.dart';
+import 'package:soccerid/screens/menu.dart';
+import 'package:soccerid/screens/newslist_form.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,27 +13,19 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Football Shop',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.blue)
-            .copyWith(secondary: Colors.blueAccent[400]),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo).copyWith(
+          secondary: Colors.orangeAccent,
+        ),
+        scaffoldBackgroundColor: const Color(0xFFF3F5F9),
+        useMaterial3: true,
       ),
-      home: MyHomePage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => MyHomePage(),
+        NewsFormPage.routeName: (context) => const NewsFormPage(),
+      },
     );
   }
 }
