@@ -1,20 +1,27 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:soccerid/widgets/left_drawer.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:soccerid/screens/product_entry_list.dart';
 
-class NewsFormPage extends StatefulWidget {
-  const NewsFormPage({super.key});
+class ProductEntryFormPage extends StatefulWidget {
+  const ProductEntryFormPage({super.key});
 
   static const routeName = '/add-product';
 
   @override
-  State<NewsFormPage> createState() => _NewsFormPageState();
+  State<ProductEntryFormPage> createState() => _ProductEntryFormPageState();
 }
 
-class _NewsFormPageState extends State<NewsFormPage> {
+class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
+  static const String baseUrl = 'http://localhost:8000'; 
+  
   final _formKey = GlobalKey<FormState>();
 
   String _title = "";
   double _price = 0;
+  int _stock = 0;
   String _description = "";
   String _category = "jersey";
   String _thumbnail = "";
@@ -28,18 +35,6 @@ class _NewsFormPageState extends State<NewsFormPage> {
     'collection',
   ];
 
-  void _resetForm() {
-    _formKey.currentState!.reset();
-    setState(() {
-      _title = "";
-      _price = 0;
-      _description = "";
-      _category = "jersey";
-      _thumbnail = "";
-      _isFeatured = false;
-    });
-  }
-
   bool _isValidUrl(String value) {
     final uri = Uri.tryParse(value);
     if (uri == null) return false;
@@ -48,6 +43,8 @@ class _NewsFormPageState extends State<NewsFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+    
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -57,7 +54,7 @@ class _NewsFormPageState extends State<NewsFormPage> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: const Color(0xFFf97316),
         foregroundColor: Colors.white,
       ),
       drawer: const LeftDrawer(),
@@ -102,8 +99,7 @@ class _NewsFormPageState extends State<NewsFormPage> {
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
-                  keyboardType:
-                      const TextInputType.numberWithOptions(decimal: true),
+                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
                   onChanged: (value) {
                     setState(() {
                       _price = double.tryParse(value) ?? 0;
@@ -119,6 +115,39 @@ class _NewsFormPageState extends State<NewsFormPage> {
                     }
                     if (parsed <= 0) {
                       return "Harga harus lebih besar dari 0.";
+                    }
+                    return null;
+                  },
+                ),
+              ),
+
+              // Stock Produk
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: TextFormField(
+                  decoration: InputDecoration(
+                    hintText: "Stok produk",
+                    labelText: "Stok Produk",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(5.0),
+                    ),
+                  ),
+                  keyboardType: TextInputType.number,
+                  onChanged: (value) {
+                    setState(() {
+                      _stock = int.tryParse(value) ?? 0;
+                    });
+                  },
+                  validator: (value) {
+                    if (value == null || value.trim().isEmpty) {
+                      return "Stok produk tidak boleh kosong!";
+                    }
+                    final parsed = int.tryParse(value);
+                    if (parsed == null) {
+                      return "Stok harus berupa angka bulat.";
+                    }
+                    if (parsed < 0) {
+                      return "Stok tidak boleh negatif.";
                     }
                     return null;
                   },
@@ -160,7 +189,7 @@ class _NewsFormPageState extends State<NewsFormPage> {
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
-                  value: _category,
+                  initialValue: _category,
                   items: _categories
                       .map(
                         (cat) => DropdownMenuItem(
@@ -216,42 +245,64 @@ class _NewsFormPageState extends State<NewsFormPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: ElevatedButton(
-                    style: ButtonStyle(
-                      backgroundColor:
-                          MaterialStateProperty.all(Colors.indigo),
+                    style: const ButtonStyle(
+                      backgroundColor: WidgetStatePropertyAll(Color(0xFFf97316)),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: const Text('Produk berhasil tersimpan!'),
-                              content: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Nama: $_title'),
-                                    Text('Harga: Rp${_price.toStringAsFixed(2)}'),
-                                    Text('Deskripsi: $_description'),
-                                    Text('Kategori: $_category'),
-                                    Text('Thumbnail: $_thumbnail'),
-                                    Text('Unggulan: ${_isFeatured ? "Ya" : "Tidak"}'),
-                                  ],
+                        final productData = jsonEncode({
+                          "name": _title,
+                          "price": _price.toInt(),
+                          "description": _description,
+                          "category": _category,
+                          "thumbnail": _thumbnail,
+                          "stock": _stock,
+                          "is_featured": _isFeatured,
+                        });
+
+                        try {
+                          // 🎯 POST ke backend dengan URL hardcoded
+                          final response = await request.postJson(
+                            '$baseUrl/create-flutter/',  // ⚠️ Sesuaikan dengan URL backend
+                            productData,
+                          );
+
+                          if (context.mounted) {
+                            if (response['status'] == 'success' || response['status'] == true) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Produk berhasil ditambahkan!'),
+                                  backgroundColor: Colors.green,
                                 ),
+                              );
+                              
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ProductEntryListPage(),
+                                ),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  content: Text(
+                                    response['message'] ?? 'Gagal menambahkan produk',
+                                  ),
+                                  backgroundColor: Colors.red,
+                                ),
+                              );
+                            }
+                          }
+                        } catch (e) {
+                          if (context.mounted) {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              SnackBar(
+                                content: Text('Error: $e'),
+                                backgroundColor: Colors.red,
                               ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    _resetForm();
-                                  },
-                                  child: const Text('OK'),
-                                ),
-                              ],
                             );
-                          },
-                        );
+                          }
+                        }
                       }
                     },
                     child: const Text(

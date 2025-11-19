@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:soccerid/screens/menu.dart';
-import 'package:soccerid/screens/newslist_form.dart';
+import 'package:soccerid/screens/product_entry_list.dart';
+import 'package:soccerid/screens/productlist_form.dart';
 
 class LeftDrawer extends StatelessWidget {
   const LeftDrawer({super.key});
@@ -12,13 +13,13 @@ class LeftDrawer extends StatelessWidget {
         children: [
           const DrawerHeader(
             decoration: BoxDecoration(
-              color: Colors.indigo,
+              color: const Color(0xFFfdba74),
             ),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Football Shop',
+                  'SoccerID',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 30,
@@ -58,7 +59,19 @@ class LeftDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const NewsFormPage(),
+                  builder: (context) => const ProductEntryFormPage(),
+                ),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.shopping_bag),
+            title: const Text('Daftar Produk'),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const ProductEntryListPage(),
                 ),
               );
             },

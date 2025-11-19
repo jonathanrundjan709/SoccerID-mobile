@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:soccerid/screens/menu.dart';
+import 'package:soccerid/screens/login.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   runApp(const MyApp());
@@ -10,13 +12,20 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Football Shop',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
-        useMaterial3: true,
+    return Provider(
+      create: (_) {
+        CookieRequest request = CookieRequest();
+        return request;
+      },
+      child: MaterialApp(
+        title: 'SoccerID',
+        theme: ThemeData(
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFFf97316))
+            .copyWith(secondary: const Color(0xFFea580c)),
+        ),
+        home: const LoginPage(),
       ),
-      home: MyHomePage(),
     );
   }
 }

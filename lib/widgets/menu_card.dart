@@ -6,6 +6,7 @@ class ItemHomepage {
   final Color color;
   final String snackMessage;
   final WidgetBuilder? destinationBuilder;
+  final Future<void> Function(BuildContext context)? onTap;
 
   const ItemHomepage(
     this.name,
@@ -13,6 +14,7 @@ class ItemHomepage {
     required this.color,
     required this.snackMessage,
     this.destinationBuilder,
+    this.onTap,
   });
 }
 
@@ -34,6 +36,11 @@ class ItemCard extends StatelessWidget {
             ..showSnackBar(
               SnackBar(content: Text(item.snackMessage)),
             );
+
+          if (item.onTap != null) {
+            item.onTap!(context);
+            return;
+          }
 
           if (item.destinationBuilder != null) {
             Navigator.push(

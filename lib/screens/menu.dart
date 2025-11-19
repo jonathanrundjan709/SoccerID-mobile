@@ -1,34 +1,65 @@
 import 'package:flutter/material.dart';
-import 'package:soccerid/screens/newslist_form.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+import 'package:soccerid/screens/login.dart';
+import 'package:soccerid/screens/product_entry_list.dart';
+import 'package:soccerid/screens/productlist_form.dart';
 import 'package:soccerid/widgets/left_drawer.dart';
-import 'package:soccerid/widgets/news_card.dart';
+import 'package:soccerid/widgets/menu_card.dart';
 
 class MyHomePage extends StatelessWidget {
   MyHomePage({super.key});
+
+  static const String baseUrl = 'http://localhost:8000';
 
   final String nama = "Jonathan Yitskhaq Rundjan";
   final String npm = "2406435231";
   final String kelas = "C";
 
   late final List<ItemHomepage> items = [
-    const ItemHomepage(
-      "All Products",
+    ItemHomepage(
+      "See Products",
       Icons.storefront,
-      color: Colors.indigo,
-      snackMessage: "Kamu telah menekan tombol All Products!",
-    ),
-    const ItemHomepage(
-      "My Products",
-      Icons.inventory_2,
-      color: Colors.teal,
-      snackMessage: "Kamu telah menekan tombol My Products!",
+      color: const Color(0xFFf97316),
+      snackMessage: "Membuka daftar produk!",
+      destinationBuilder: (context) => const ProductEntryListPage(),
     ),
     ItemHomepage(
       "Add Products",
       Icons.add_circle,
-      color: Colors.orange,
+      color: const Color(0xFFf97316),
       snackMessage: "Kamu telah menekan tombol Add Products!",
-      destinationBuilder: (context) => const NewsFormPage(),
+      destinationBuilder: (context) => const ProductEntryFormPage(),
+    ),
+    ItemHomepage(
+      "Logout",
+      Icons.logout,
+      color: Colors.red,
+      snackMessage: "Logging out...",
+      onTap: (context) async {
+        final request = context.read<CookieRequest>();
+        // 🎯 Logout dengan URL hardcoded
+        final response = await request.logout('$baseUrl/auth/logout/');  // ⚠️ Sesuaikan
+        final message = response["message"];
+        if (!context.mounted) return;
+        if (response['status']) {
+          final uname = response["username"];
+          ScaffoldMessenger.of(context)
+            ..hideCurrentSnackBar()
+            ..showSnackBar(
+              SnackBar(content: Text("$message See you again, $uname.")),
+            );
+          Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(builder: (_) => const LoginPage()),
+            (route) => false,
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(message)),
+          );
+        }
+      },
     ),
   ];
 
@@ -43,7 +74,7 @@ class MyHomePage extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: Theme.of(context).colorScheme.primary,
+        backgroundColor: const Color(0xFFf97316),
         foregroundColor: Colors.white,
       ),
       drawer: const LeftDrawer(),
@@ -52,7 +83,6 @@ class MyHomePage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Info Cards Row (NPM, Name, Class)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -61,10 +91,7 @@ class MyHomePage extends StatelessWidget {
                 InfoCard(title: 'Class', content: kelas),
               ],
             ),
-            
             const SizedBox(height: 16),
-
-            // Welcome Section
             const Center(
               child: Column(
                 children: [
@@ -79,10 +106,7 @@ class MyHomePage extends StatelessWidget {
                 ],
               ),
             ),
-
             const SizedBox(height: 16),
-
-            // Grid Menu Items
             Expanded(
               child: GridView.count(
                 primary: true,
